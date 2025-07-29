@@ -5,10 +5,19 @@ import { FlatList, Image, SafeAreaView, StyleSheet, Text, TouchableOpacity, View
 export default function HomeScreen({ navigation, route }: any) {
     const [products, setProducts] = useState(initialProducts);
 
+    const onUpdateProduct = (updatedProduct: any) => {
+        setProducts((prev) =>
+            prev.map((p) => (p.id === updatedProduct.id ? updatedProduct : p))
+        );
+    };
 
     const navigationHandler = (item: any) => {
-        navigation.navigate('ProductDetails', { products: item });
+        navigation.navigate('ProductDetails', {
+            product: item,
+            onUpdate: onUpdateProduct,
+        });
     };
+
     const onAddProduct = (newProduct: any) => {
         setProducts(prev => [...prev, newProduct]);
     };
@@ -16,7 +25,6 @@ export default function HomeScreen({ navigation, route }: any) {
     const goToAddProduct = () => {
         navigation.navigate('AddProduct', { onGoBack: onAddProduct });
     };
-    // const [products, setProducts] = useState(initialProducts);
     return <SafeAreaView style={styles.bodyArea}>
         <Text style={styles.headerText}>STORE</Text>
         <FlatList data={products} keyExtractor={(item) => item.id}
@@ -37,7 +45,6 @@ export default function HomeScreen({ navigation, route }: any) {
             }
             numColumns={2}
         />
-        {/* <Add /> */}
         <TouchableOpacity style={styles.btn} onPress={() => goToAddProduct()}>
             <Text style={styles.btnText}>Add New Product</Text>
         </TouchableOpacity>
